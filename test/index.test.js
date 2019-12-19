@@ -14,15 +14,6 @@ describe('it should handle graph query request', () => {
     assert.equal(generatedQuery, 'query{test{id name}}')
   });
 
-  it('should generate a real-case simple query', () => {
-    const queryName = 'productLine';
-    const queryParams = [];
-    const queryFields = ['name', 'code', 'description'];
-
-    const generatedQuery = new GraphQLQueryRequest(queryName, queryParams, queryFields).generate();
-    assert.equal(generatedQuery, 'query{productLine{name code description}}');
-  });
-
   it('should generate a simple query with params', () => {
     const queryName = 'test';
     const queryParams = [{
@@ -35,15 +26,78 @@ describe('it should handle graph query request', () => {
     assert.equal(generatedQuery, 'query($id:String){test(id:$id){name}}');
   });
 
-  it('should generate a real-case simple query', () => {
-    const queryName = 'productLine';
+  it('should generate a query with multiple params', () => {
+    const queryName = 'test';
+    const queryParams = [{
+      name: 'id',
+      type: 'String'
+    }, {
+      name: 'name',
+      type: 'String'
+    }];
+    const queryFields = ['name'];
+
+    const generatedQuery = new GraphQLQueryRequest(queryName, queryParams, queryFields).generate();
+    assert.equal(generatedQuery, 'query($id:String,$name:String){test(id:$id,name:$name){name}}');
+  });
+
+  it('should generate a query with nested fields', () => {
+    const queryName = 'test';
+    const queryParams = [];
+    const queryFields = [{foo: ['bar', 'baz']}];
+
+    const generatedQuery = new GraphQLQueryRequest(queryName, queryParams, queryFields).generate();
+    assert.equal(generatedQuery, 'query{test{foo{bar baz}}}');
+  });
+
+  it('should generate a query with mixed fields', () => {
+    const queryName = 'test';
+    const queryParams = [];
+    const queryFields = [
+      {foo: ['bar', 'baz']},
+      'let'
+    ];
+
+    const generatedQuery = new GraphQLQueryRequest(queryName, queryParams, queryFields).generate();
+    assert.equal(generatedQuery, 'query{test{foo{bar baz} let}}');
+  });
+
+  it('should generate a query with mixed fields and params', () => {
+    const queryName = 'test';
     const queryParams = [{
       name: 'id',
       type: 'String'
     }];
-    const queryFields = ['name', 'code', 'description'];
+    const queryFields = [
+      'let', {
+        foo: ['bar', 'baz']
+      },
+    ];
 
     const generatedQuery = new GraphQLQueryRequest(queryName, queryParams, queryFields).generate();
-    assert.equal(generatedQuery, 'query($id:String){productLine(id:$id){name code description}}');
+    assert.equal(generatedQuery, 'query($id:String){test(id:$id){dagfio foo{bar baz} let}}');
+  });
+
+  it('should generate a query with multiple subfields', () => {
+    const queryName = 'test';
+    const queryParams = [];
+    const queryFields = [
+      'id', 'name', {
+        foo: [
+          'id', 'name', {
+            bar: [
+              'baz', {
+                nolgo: [
+                  'id'
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ];
+
+    const generatedQuery = new GraphQLQueryRequest(queryName, queryParams, queryFields).generate();
+    assert.equal(generatedQuery, 'query{test{id name foo{id name bar{baz nolgo{id}}}}}');
   })
 });

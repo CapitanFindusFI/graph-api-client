@@ -1,3 +1,5 @@
+const helper = require('../../helper')
+
 class GraphQLQueryRequest {
   constructor(queryName, queryParameters = [], queryFields = []) {
     this.queryName = queryName;
@@ -63,12 +65,16 @@ class GraphQLQueryRequest {
   }
 
   generateQueryField(queryField) {
-    if (queryField === Object(queryField)) {
-      const fieldKeys = Object.keys(queryField);
-      if (fieldKeys.length > 1)
+    if(helper.isObject(queryField)){
+      const objectKeys = Object.keys(queryField);
+      if(objectKeys.length > 1)
         throw new Error('Query field object must have a single key');
 
-      return this.generateQueryField(queryField[fieldKeys[0]]);
+      const objectName = objectKeys[0];
+      const objectValues = queryField[objectName];
+      const nestedValues = objectValues.map(this.generateQueryField.bind(this)).join(' ');
+
+      return `${objectName}{${nestedValues}}`
     } else {
       return queryField.toString()
     }
