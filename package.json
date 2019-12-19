@@ -2,5 +2,12 @@
   "name": "graph-api-client",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "mocha": "^6.2.2"
+  }
 }
