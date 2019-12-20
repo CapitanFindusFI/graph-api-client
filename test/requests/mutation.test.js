@@ -2,7 +2,7 @@ const mocha = require('mocha');
 const describe = mocha.describe;
 const assert = require('assert');
 
-const GraphQLMutationRequest = require('../src/client/graphql-request/mutation');
+const GraphQLMutationRequest = require('../../src/client/graphql-request/mutation');
 
 describe('it should handle graph mutation request', () => {
   it('should generate a simple mutation', () => {

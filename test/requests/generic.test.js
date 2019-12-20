@@ -2,8 +2,8 @@ const mocha = require('mocha');
 const describe = mocha.describe;
 const assert = require('assert');
 
-const GraphQLMutationRequest = require('../src/client/graphql-request/mutation');
-const GraphQLQueryRequest = require('../src/client/graphql-request/query');
+const GraphQLMutationRequest = require('../../src/client/graphql-request/mutation');
+const GraphQLQueryRequest = require('../../src/client/graphql-request/query');
 
 describe('it should correctly throw library errors', () => {
   it('should throw an error for missing query fields', () => {
