@@ -36,3 +36,5 @@ class GraphQLMutationRequest extends GraphQLRequest {
   }
 
 }
+
+module.exports = GraphQLMutationRequest;
