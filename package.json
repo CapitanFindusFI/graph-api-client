@@ -2,6 +2,10 @@
   "name": "graph-api-client",
   "version": "1.0.0",
   "main": "index.js",
+  "author": {
+    "name": "CapitanFindusFI",
+    "email": "am95.dev@gmail.com"
+  },
   "license": "MIT",
   "scripts": {
     "test": "mocha ./test"
@@ -9,5 +13,14 @@
   "dependencies": {
     "axios": "^0.19.0",
     "mocha": "^6.2.2"
+  },
+  "keywords": [
+    "graphql",
+    "axios",
+    "api"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CapitanFindusFI/graph-api-client"
   }
 }
