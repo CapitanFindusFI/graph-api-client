@@ -75,7 +75,7 @@ describe('it should handle graph query request', () => {
     ];
 
     const generatedQuery = new GraphQLQueryRequest(queryName, queryParams, queryFields).generate();
-    assert.equal(generatedQuery, 'query($id:String){test(id:$id){dagfio foo{bar baz} let}}');
+    assert.equal(generatedQuery, 'query($id:String){test(id:$id){let foo{bar baz}}}');
   });
 
   it('should generate a query with multiple subfields', () => {

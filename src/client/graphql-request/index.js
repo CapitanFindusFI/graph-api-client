@@ -12,6 +12,38 @@ class GraphQLRequest {
     return this;
   }
 
+  getParamQueryName(graphQLParam) {
+    if (!graphQLParam['name'])
+      throw new Error('GraphQL param is missing its name');
+
+    let paramName;
+    if (graphQLParam['alias']) {
+      const paramString = graphQLParam['alias'].split('$');
+      paramName = paramString[paramString.length - 1];
+    } else {
+      paramName = `${graphQLParam['name']}`
+    }
+
+    return paramName
+  }
+
+  generateHeaderField(headerParam) {
+    const fieldName = `$${this.getParamQueryName(headerParam)}`;
+
+    if (!headerParam['type'])
+      throw new Error(`Header param: ${headerParam['name']} is missing its type`);
+
+    const fieldType = headerParam['isArray'] ? `[${headerParam['type']}]` : headerParam['type'];
+
+    return [fieldName, fieldType].join(':')
+  }
+
+  generateFragmentField(fragmentField) {
+    const fieldName = this.getParamQueryName(fragmentField);
+
+    return [fieldName, `$${fieldName}`].join(':');
+  }
+
   generateQueryField(queryField) {
     if (helper.isObject(queryField)) {
       const objectKeys = Object.keys(queryField);
@@ -28,11 +60,26 @@ class GraphQLRequest {
     }
   }
 
-  generateQueryFields() {
-    return this.resultFields.map(this.generateQueryField.bind(this)).join(' ');
+  generateHeader() {
+    throw new Error('Must be implemented in extending classes');
+  }
+
+  generateFragment() {
+    throw new Error('Must be implemented in extending classes');
+  }
+
+  generateBody() {
+    throw new Error('Must be implemented in extending classes');
   }
 
   generate() {
-    throw new Error('Must be implemented on child classes');
+    return [
+      this.generateHeader(),
+      this.generateFragment(),
+      this.generateBody(),
+      '}}'
+    ].join('');
   }
 }
+
+module.exports = GraphQLRequest;
