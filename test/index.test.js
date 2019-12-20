@@ -2,7 +2,7 @@ const mocha = require('mocha');
 const describe = mocha.describe;
 const assert = require('assert');
 
-const GraphQLQueryRequest = require('../src/client/graphql-query');
+const GraphQLQueryRequest = require('../src/client/graphql-request/query');
 
 describe('it should handle graph query request', () => {
   it('should generate a simple query', () => {

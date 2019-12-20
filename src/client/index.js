@@ -1,5 +1,5 @@
 const axios = require('axios');
-const graphQLQueryRequest = require('./graphql-query');
+const GraphQLQueryRequest = require('./graphql-request/query');
 
 class GraphAPIClient {
   constructor(axiosRequestConfig) {
@@ -7,7 +7,7 @@ class GraphAPIClient {
   }
 
   query(queryName, queryParams, queryFields) {
-    const queryRequest = new graphQLQueryRequest(queryName, queryParams, queryFields);
+    const queryRequest = new GraphQLQueryRequest(queryName, queryParams, queryFields);
     return queryRequest.generate();
   }
 }

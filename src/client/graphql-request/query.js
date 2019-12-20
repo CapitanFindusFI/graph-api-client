@@ -1,12 +1,8 @@
-const helper = require('../../helper');
+const GraphQLRequest = require('../graphql-request');
 
-class GraphQLQueryRequest {
-  constructor(queryName, queryParameters = [], queryFields = []) {
-    this.queryName = queryName;
-    this.queryParameters = queryParameters;
-    this.queryFields = queryFields;
-
-    return this;
+class GraphQLQueryRequest extends GraphQLRequest {
+  constructor(queryName, queryParameters = [], queryFields) {
+    return super(queryName, queryParameters, queryFields);
   }
 
   getParamQueryName(graphQLParam) {
@@ -37,8 +33,8 @@ class GraphQLQueryRequest {
 
   generateQueryHeader() {
     let queryString = 'query';
-    if (this.queryParameters.length) {
-      const headerParams = this.queryParameters.map(this.generateHeaderField.bind(this));
+    if (this.requestParams.length) {
+      const headerParams = this.requestParams.map(this.generateHeaderField.bind(this));
       queryString += `(${headerParams})`
     }
 
@@ -53,35 +49,15 @@ class GraphQLQueryRequest {
   }
 
   generateQueryFragment() {
-    let fragmentField = this.queryName;
-    if (this.queryParameters.length) {
-      const fragmentParams = this.queryParameters.map(this.generateFragmentField.bind(this));
+    let fragmentField = this.requestName;
+    if (this.requestParams.length) {
+      const fragmentParams = this.requestParams.map(this.generateFragmentField.bind(this));
       fragmentField += `(${fragmentParams})`;
     }
 
     fragmentField += '{';
 
     return fragmentField;
-  }
-
-  generateQueryField(queryField) {
-    if(helper.isObject(queryField)){
-      const objectKeys = Object.keys(queryField);
-      if(objectKeys.length > 1)
-        throw new Error('Query field object must have a single key');
-
-      const objectName = objectKeys[0];
-      const objectValues = queryField[objectName];
-      const nestedValues = objectValues.map(this.generateQueryField.bind(this)).join(' ');
-
-      return `${objectName}{${nestedValues}}`
-    } else {
-      return queryField.toString()
-    }
-  }
-
-  generateQueryFields() {
-    return this.queryFields.map(this.generateQueryField.bind(this)).join(' ');
   }
 
   generate() {
