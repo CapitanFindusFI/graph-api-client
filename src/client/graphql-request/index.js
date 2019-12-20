@@ -1,13 +1,14 @@
 const helper = require('../../helper');
 
 class GraphQLRequest {
-  constructor(requestName, requestParams, resultFields) {
+  constructor(requestName, requestParams, resultFields, requestValues = []) {
     if (!Array.isArray(resultFields))
       throw new Error('Result fields must be an array');
 
     this.requestName = requestName;
     this.requestParams = requestParams;
     this.resultFields = resultFields;
+    this.requestValues = requestValues;
 
     return this;
   }

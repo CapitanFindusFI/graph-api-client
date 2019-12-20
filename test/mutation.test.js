@@ -13,8 +13,11 @@ describe('it should handle graph mutation request', () => {
       alias: '$turnId'
     }];
     const queryFields = ['id', 'name'];
+    const mutationValues = {
+      id: '123'
+    };
 
-    const generatedQuery = new GraphQLMutationRequest(mutationName, mutationParams, queryFields).generate();
+    const generatedQuery = new GraphQLMutationRequest(mutationName, mutationParams, queryFields, mutationValues).generate();
     assert.equal(generatedQuery, 'mutation($turnId:String){test(turnId:$turnId){id name}}')
   });
 
