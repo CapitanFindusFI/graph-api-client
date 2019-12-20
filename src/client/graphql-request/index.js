@@ -13,6 +13,17 @@ class GraphQLRequest {
     return this;
   }
 
+  areValuesValid() {
+    const valuesKeys = Object.keys(this.requestValues);
+    const mutationFields = this.requestParams.map(this.getParamQueryName.bind(this));
+
+    const wrongValues = mutationFields.filter(key => valuesKeys.indexOf(key.toString()) === -1);
+    if (wrongValues.length > 0)
+      throw new Error(`Mutation is missing following fields: ${wrongValues.join(',')}, double check your aliases if present`);
+
+    return true;
+  }
+
   getParamQueryName(graphQLParam) {
     if (!graphQLParam['name'])
       throw new Error('GraphQL param is missing its name');
@@ -74,6 +85,9 @@ class GraphQLRequest {
   }
 
   generate() {
+    if (!this.areValuesValid())
+      throw new Error('Passed values does not conform with query');
+
     return [
       this.generateHeader(),
       this.generateFragment(),

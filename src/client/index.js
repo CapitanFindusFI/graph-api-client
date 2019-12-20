@@ -21,8 +21,8 @@ class GraphAPIClient {
     })
   }
 
-  query(queryName, queryParams, queryFields) {
-    const queryRequest = new GraphQLQueryRequest(queryName, queryParams, queryFields);
+  query(queryName, queryParams, queryFields, queryValues) {
+    const queryRequest = new GraphQLQueryRequest(queryName, queryParams, queryFields, queryValues);
     return queryRequest.generate();
   }
 

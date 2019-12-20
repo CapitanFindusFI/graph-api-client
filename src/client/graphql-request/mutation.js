@@ -39,24 +39,6 @@ class GraphQLMutationRequest extends GraphQLRequest {
     return this.resultFields.map(this.generateQueryField.bind(this)).join(' ');
   }
 
-  generate() {
-    if (!this.areMutationValuesValid())
-      throw new Error('Mutation values does not conform to query signature');
-
-    return super.generate();
-  }
-
-  areMutationValuesValid() {
-    const valuesKeys = Object.keys(this.requestValues);
-    const mutationFields = this.requestParams.map(this.getParamQueryName.bind(this));
-
-    const wrongValues = mutationFields.filter(key => valuesKeys.indexOf(key.toString()) === -1);
-    if (wrongValues.length > 0)
-      throw new Error(`Mutation is missing following fields: ${wrongValues.join(',')}, double check your aliases if present`);
-
-    return true;
-  }
-
 }
 
 module.exports = GraphQLMutationRequest;

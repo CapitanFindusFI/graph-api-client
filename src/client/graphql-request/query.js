@@ -1,8 +1,8 @@
 const GraphQLRequest = require('../graphql-request');
 
 class GraphQLQueryRequest extends GraphQLRequest {
-  constructor(queryName, queryParameters = [], queryFields) {
-    return super(queryName, queryParameters, queryFields);
+  constructor(queryName, queryParameters = [], queryFields, queryValues) {
+    return super(queryName, queryParameters, queryFields, queryValues);
   }
 
   generateHeader() {
