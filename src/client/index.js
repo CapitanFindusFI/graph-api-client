@@ -21,13 +21,23 @@ class GraphAPIClient {
     })
   }
 
-  query(queryName, queryParams, queryFields, queryValues) {
-    const queryRequest = new GraphQLQueryRequest(queryName, queryParams, queryFields, queryValues);
-    return queryRequest.generate();
+  collectRequestBody(query, variables) {
+    return {
+      query, variables
+    }
   }
 
-  mutate(mutationName, mutationParams, queryFields, mutationValues) {
-    const mutationRequest = new GraphQLMutationRequest(mutationName, mutationParams, queryFields, mutationValues);
-    return mutationRequest.generate();
+  query(queryName, queryParams, queryFields, queryValues, path = '/graphql') {
+    const graphQLPayload = new GraphQLQueryRequest(queryName, queryParams, queryFields, queryValues).generate();
+    const requestBody = this.collectRequestBody(graphQLPayload, queryValues);
+
+    return this.post(path, requestBody);
+  }
+
+  mutate(mutationName, mutationParams, queryFields, mutationValues, path = '/graphql') {
+    const graphQLPayload = new GraphQLMutationRequest(mutationName, mutationParams, queryFields, mutationValues).generate();
+    const requestBody = this.collectRequestBody(graphQLPayload, mutationValues);
+
+    return this.post(path, requestBody);
   }
 }

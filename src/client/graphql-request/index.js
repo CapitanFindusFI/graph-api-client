@@ -1,7 +1,7 @@
 const helper = require('../../helper');
 
 class GraphQLRequest {
-  constructor(requestName, requestParams, resultFields, requestValues = []) {
+  constructor(requestName, requestParams, resultFields, requestValues) {
     if (!Array.isArray(resultFields))
       throw new Error('Result fields must be an array');
 
@@ -14,6 +14,10 @@ class GraphQLRequest {
   }
 
   areValuesValid() {
+    if (!this.requestValues) {
+      return true
+    }
+
     const valuesKeys = Object.keys(this.requestValues);
     const mutationFields = this.requestParams.map(this.getParamQueryName.bind(this));
 
