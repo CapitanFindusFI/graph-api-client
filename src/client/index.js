@@ -41,3 +41,5 @@ class GraphAPIClient {
     return this.post(path, requestBody);
   }
 }
+
+module.exports = GraphAPIClient;
