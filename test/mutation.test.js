@@ -14,20 +14,11 @@ describe('it should handle graph mutation request', () => {
     }];
     const queryFields = ['id', 'name'];
     const mutationValues = {
-      id: '123'
+      turnId: '123'
     };
 
     const generatedQuery = new GraphQLMutationRequest(mutationName, mutationParams, queryFields, mutationValues).generate();
     assert.equal(generatedQuery, 'mutation($turnId:String){test(turnId:$turnId){id name}}')
-  });
-
-  it('should throw an error for missing parameters', () => {
-    const mutationName = 'test';
-    const mutationParams = [];
-    const queryFields = ['id', 'name'];
-
-    const methodCall = new GraphQLMutationRequest(mutationName, mutationParams, queryFields).generate;
-    assert.throws(methodCall, Error, 'error thrown');
   });
 
   it('should generate a simple query with params', () => {
@@ -37,8 +28,11 @@ describe('it should handle graph mutation request', () => {
       type: 'String'
     }];
     const queryFields = ['name'];
+    const mutationValues = {
+      id: '123'
+    };
 
-    const generatedQuery = new GraphQLMutationRequest(mutationName, mutationParams, queryFields).generate();
+    const generatedQuery = new GraphQLMutationRequest(mutationName, mutationParams, queryFields, mutationValues).generate();
     assert.equal(generatedQuery, 'mutation($id:String){test(id:$id){name}}');
   });
 
@@ -52,8 +46,12 @@ describe('it should handle graph mutation request', () => {
       type: 'String'
     }];
     const queryFields = ['name'];
+    const mutationValues = {
+      id: '123',
+      name: 'nolgo'
+    };
 
-    const generatedQuery = new GraphQLMutationRequest(mutationName, mutationParams, queryFields).generate();
+    const generatedQuery = new GraphQLMutationRequest(mutationName, mutationParams, queryFields, mutationValues).generate();
     assert.equal(generatedQuery, 'mutation($id:String,$name:String){test(id:$id,name:$name){name}}');
   });
 
@@ -61,21 +59,29 @@ describe('it should handle graph mutation request', () => {
     const mutationName = 'test';
     const mutationParams = [];
     const queryFields = [{foo: ['bar', 'baz']}];
+    const mutationValues = {};
 
-    const generatedQuery = new GraphQLMutationRequest(mutationName, mutationParams, queryFields).generate();
+    const generatedQuery = new GraphQLMutationRequest(mutationName, mutationParams, queryFields, mutationValues).generate();
     assert.equal(generatedQuery, 'mutation{test{foo{bar baz}}}');
   });
 
   it('should generate a query with mixed fields', () => {
     const mutationName = 'test';
-    const mutationParams = [];
+    const mutationParams = [{
+      name: 'turn',
+      type: 'String',
+      alias: 'nolgo'
+    }];
     const queryFields = [
       {foo: ['bar', 'baz']},
       'let'
     ];
+    const mutationValues = {
+      nolgo: '123'
+    };
 
-    const generatedQuery = new GraphQLMutationRequest(mutationName, mutationParams, queryFields).generate();
-    assert.equal(generatedQuery, 'mutation{test{foo{bar baz} let}}');
+    const generatedQuery = new GraphQLMutationRequest(mutationName, mutationParams, queryFields, mutationValues).generate();
+    assert.equal(generatedQuery, 'mutation($nolgo:String){test(nolgo:$nolgo){foo{bar baz} let}}');
   });
 
   it('should generate a query with mixed fields and params', () => {
@@ -89,12 +95,15 @@ describe('it should handle graph mutation request', () => {
         foo: ['bar', 'baz']
       },
     ];
+    const mutationValues = {
+      id: '123'
+    };
 
-    const generatedQuery = new GraphQLMutationRequest(mutationName, mutationParams, queryFields).generate();
+    const generatedQuery = new GraphQLMutationRequest(mutationName, mutationParams, queryFields, mutationValues).generate();
     assert.equal(generatedQuery, 'mutation($id:String){test(id:$id){let foo{bar baz}}}');
   });
 
-  it('should generate a query with multiple subfields', () => {
+  it('should generate a mutation with multiple subfields', () => {
     const mutationName = 'test';
     const mutationParams = [];
     const queryFields = [
@@ -112,8 +121,9 @@ describe('it should handle graph mutation request', () => {
         ]
       }
     ];
+    const mutationValues = {};
 
-    const generatedQuery = new GraphQLMutationRequest(mutationName, mutationParams, queryFields).generate();
+    const generatedQuery = new GraphQLMutationRequest(mutationName, mutationParams, queryFields, mutationValues).generate();
     assert.equal(generatedQuery, 'mutation{test{id name foo{id name bar{baz nolgo{id}}}}}');
   })
 });

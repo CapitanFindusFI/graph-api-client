@@ -14,15 +14,6 @@ describe('it should handle graph query request', () => {
     assert.equal(generatedQuery, 'query{test{id name}}');
   });
 
-  it('should throw an error for missing query fields', () => {
-    const queryName = 'test';
-    const queryParams = [];
-    const queryFields = [];
-
-    const methodCall = new GraphQLQueryRequest(queryName, queryParams, queryFields).generate;
-    assert.throws(methodCall, Error, 'missing params');
-  });
-
   it('should generate a simple query with params', () => {
     const queryName = 'test';
     const queryParams = [{
