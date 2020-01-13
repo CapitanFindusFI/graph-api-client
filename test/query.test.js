@@ -99,5 +99,17 @@ describe('it should handle graph query request', () => {
 
     const generatedQuery = new GraphQLQueryRequest(queryName, queryParams, queryFields).generate();
     assert.equal(generatedQuery, 'query{test{id name foo{id name bar{baz nolgo{id}}}}}');
+  });
+
+  it('should generate a query with correct parameters', () => {
+    const queryName = 'test';
+    const queryParams = [{
+      name: 'input',
+      type: 'TypeName'
+    }];
+    const queryFields = ['id'];
+
+    const generatedQuery = new GraphQLQueryRequest(queryName, queryParams, queryFields).generate();
+    assert.equal(generatedQuery, 'query($input:TypeName){test(input:$input){id}}')
   })
 });

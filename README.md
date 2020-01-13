@@ -15,9 +15,12 @@ class GraphAPIClient {
 then just call the `.query` or the `.mutation` methods to enjoy magic things
 requests are similar, they params are sightly different instead
 
-### Queries
+The main class `GraphQLRequest` is being extended by `GraphQLQueryRequest` and `GraphQLMutationRequest`, and is being utilized to generate GraphQL query string,
+used by the `GraphAPIClient` with its methods `.query` and `.mutate`
 
-The `.query` method requires the following parameters:
+### Query Request
+
+The `GraphQLQueryRequest` class requires the following parameters:
 - queryName (String), which represents the query name inside GraphQL
 - queryParameters (`[{name: String, type: String}]`), which represents parameters to be passed to GraphQL.  
 They'll be added inside query header and fragment
