@@ -108,8 +108,11 @@ describe('it should handle graph query request', () => {
       type: 'TypeName'
     }];
     const queryFields = ['id'];
+    const queryValues = [{
+      $input: 'foo'
+    }];
 
-    const generatedQuery = new GraphQLQueryRequest(queryName, queryParams, queryFields).generate();
+    const generatedQuery = new GraphQLQueryRequest(queryName, queryParams, queryFields, queryValues).generate();
     assert.equal(generatedQuery, 'query($input:TypeName){test(input:$input){id}}')
   })
 });

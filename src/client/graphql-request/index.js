@@ -23,7 +23,7 @@ class GraphQLRequest {
 
     const wrongValues = mutationFields.filter(key => valuesKeys.indexOf(key.toString()) === -1);
     if (wrongValues.length > 0)
-      throw new Error(`Mutation is missing following fields: ${wrongValues.join(',')}, double check your aliases if present`);
+      throw new Error(`GraphQL Request is missing following fields: ${wrongValues.join(',')}, double check your aliases if present`);
 
     return true;
   }
