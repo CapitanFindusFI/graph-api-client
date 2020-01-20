@@ -1,11 +1,12 @@
 import GraphQLRequest from "./index";
-import {GraphQLParam} from "../../interfaces/graphql-param";
+import {GraphQLParam} from "../../interfaces";
+import {GraphQLField} from "../../types";
 
 class GraphQLQueryRequest extends GraphQLRequest {
     constructor(queryName: string,
-                queryParameters: [GraphQLParam],
-                queryFields: [string],
-                queryValues: { [name: string]: any }
+                queryParameters: GraphQLParam[],
+                queryFields: GraphQLField[],
+                queryValues: { [key: string]: any } = {}
     ) {
         super(queryName, queryParameters, queryFields, queryValues);
         return this;

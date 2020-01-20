@@ -1,12 +1,13 @@
 import GraphQLRequest from "./index";
-import {GraphQLParam} from "../../interfaces/graphql-param";
 import Helper from "../../helper";
+import {GraphQLParam} from "../../interfaces";
+import {GraphQLField} from "../../types";
 
 class GraphQLMutationRequest extends GraphQLRequest {
     constructor(mutationName: string,
-                mutationParameters: [GraphQLParam],
-                queryFields: [string],
-                mutationValues: { [name: string]: any }
+                mutationParameters: GraphQLParam[],
+                queryFields: GraphQLField[],
+                mutationValues: { [key: string]: any } = {}
     ) {
         if (!Array.isArray(mutationParameters))
             throw new Error('Mutation must provide parameters');

@@ -8,23 +8,28 @@
   },
   "license": "MIT",
   "scripts": {
-    "test": "mocha ./test",
+    "test": "jest --config jestconfig.json",
     "build": "tsc"
   },
   "dependencies": {
-    "axios": "^0.19.0",
-    "mocha": "^6.2.2"
+    "axios": "^0.19.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.9.0",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.3.0",
+    "typescript": "^3.7.5"
   },
   "keywords": [
     "graphql",
     "axios",
     "api"
   ],
+  "files": [
+    "lib/**/*"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/CapitanFindusFI/graph-api-client"
-  },
-  "devDependencies": {
-    "typescript": "^3.7.5"
   }
 }

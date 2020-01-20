@@ -1,16 +1,17 @@
-import {GraphQLParam} from "../../interfaces/graphql-param";
 import Helper from "../../helper";
+import {GraphQLField} from "../../types";
+import {GraphQLParam} from "../../interfaces";
 
 class GraphQLRequest {
     protected requestName: string;
-    protected requestParams: [GraphQLParam];
-    protected resultFields: [string];
-    protected requestValues: { [name: string]: any };
+    protected requestParams: GraphQLParam[];
+    protected resultFields: GraphQLField[];
+    protected requestValues: { [key: string]: any };
 
     constructor(requestName: string,
-                requestParams: [GraphQLParam],
-                resultFields: [string],
-                requestValues: { [name: string]: any }
+                requestParams: GraphQLParam[],
+                resultFields: GraphQLField[],
+                requestValues: { [key: string]: any } = {}
     ) {
         if (!Array.isArray(resultFields))
             throw new Error('Result fields must be an array');
@@ -24,14 +25,12 @@ class GraphQLRequest {
     }
 
     areValuesValid(): boolean {
-        if (!this.requestValues) {
-            return true
-        }
+        const valueKeys = Object.keys(this.requestValues);
+        if (!valueKeys.length) return true;
 
-        const valuesKeys = Object.keys(this.requestValues);
         const mutationFields = this.requestParams.map(this.getParamQueryName.bind(this));
 
-        const wrongValues = mutationFields.filter(key => valuesKeys.indexOf(key.toString()) === -1);
+        const wrongValues = mutationFields.filter(key => valueKeys.indexOf(key.toString()) === -1);
         if (wrongValues.length > 0)
             throw new Error(`GraphQL Request is missing following fields: ${wrongValues.join(',')}, double check your aliases if present`);
 

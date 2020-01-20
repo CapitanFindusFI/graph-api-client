@@ -1,7 +1,7 @@
 import axios, {AxiosInstance, AxiosRequestConfig} from 'axios';
 import GraphQLQueryRequest from "./graphql-request/query";
 import GraphQLMutationRequest from "./graphql-request/mutation";
-import {GraphQLParam} from "../interfaces/graphql-param";
+import {GraphQLParam} from "../interfaces";
 
 class GraphAPIClient {
     private axios: AxiosInstance;
@@ -31,9 +31,9 @@ class GraphAPIClient {
     }
 
     query<T>(queryName: string,
-             queryParams: [GraphQLParam],
-             queryFields: [string],
-             queryValues: { [name: string]: any },
+             queryParams: GraphQLParam[],
+             queryFields: string[],
+             queryValues: { [name: string]: any } = {},
              path: string = '/graphql'): Promise<T> {
         const graphQLPayload = new GraphQLQueryRequest(queryName, queryParams, queryFields, queryValues).generate();
         const requestBody = this.collectRequestBody(graphQLPayload, queryValues);
@@ -42,9 +42,9 @@ class GraphAPIClient {
     }
 
     mutate<T>(mutationName: string,
-              mutationParams: [GraphQLParam],
-              queryFields: [string],
-              mutationValues: { [name: string]: any },
+              mutationParams: GraphQLParam[],
+              queryFields: string[],
+              mutationValues: { [name: string]: any } = {},
               path: string = '/graphql'): Promise<T> {
         const graphQLPayload = new GraphQLMutationRequest(mutationName, mutationParams, queryFields, mutationValues).generate();
         const requestBody = this.collectRequestBody(graphQLPayload, mutationValues);
