@@ -1,43 +1,44 @@
+import { IGraphQLParam } from "../../interfaces";
+import { GraphQLField } from "../../types";
 import GraphQLRequest from "./index";
-import {GraphQLParam} from "../../interfaces";
-import {GraphQLField} from "../../types";
 
 class GraphQLQueryRequest extends GraphQLRequest {
-    constructor(queryName: string,
-                queryParameters: GraphQLParam[],
-                queryFields: GraphQLField[],
-                queryValues: { [key: string]: any } = {}
-    ) {
-        super(queryName, queryParameters, queryFields, queryValues);
-        return this;
+  constructor(
+    queryName: string,
+    queryParameters: IGraphQLParam[],
+    queryFields: GraphQLField[],
+    queryValues: { [key: string]: any } = {}
+  ) {
+    super(queryName, queryParameters, queryFields, queryValues);
+    return this;
+  }
+
+  public generateHeader(): string {
+    let queryString = "query";
+    if (this.requestParams.length) {
+      const headerParams = this.requestParams.map(this.generateHeaderField.bind(this));
+      queryString += `(${headerParams})`;
     }
 
-    generateHeader(): string {
-        let queryString = 'query';
-        if (this.requestParams.length) {
-            const headerParams = this.requestParams.map(this.generateHeaderField.bind(this));
-            queryString += `(${headerParams})`
-        }
+    queryString += "{";
+    return queryString;
+  }
 
-        queryString += '{';
-        return queryString;
+  public generateFragment(): string {
+    let fragmentField = this.requestName;
+    if (this.requestParams.length) {
+      const fragmentParams = this.requestParams.map(this.generateFragmentField.bind(this));
+      fragmentField += `(${fragmentParams})`;
     }
 
-    generateFragment(): string {
-        let fragmentField = this.requestName;
-        if (this.requestParams.length) {
-            const fragmentParams = this.requestParams.map(this.generateFragmentField.bind(this));
-            fragmentField += `(${fragmentParams})`;
-        }
+    fragmentField += "{";
 
-        fragmentField += '{';
+    return fragmentField;
+  }
 
-        return fragmentField;
-    }
-
-    generateBody(): string {
-        return this.resultFields.map(this.generateQueryField.bind(this)).join(' ');
-    }
+  public generateBody(): string {
+    return this.resultFields.map(this.generateQueryField.bind(this)).join(" ");
+  }
 }
 
 export default GraphQLQueryRequest;

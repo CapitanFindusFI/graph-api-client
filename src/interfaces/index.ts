@@ -1,6 +1,6 @@
-export interface GraphQLParam {
-    name: string
-    type: string
-    alias?: string
-    isArray?: boolean
+export interface IGraphQLParam {
+  alias?: string;
+  name: string;
+  isArray?: boolean;
+  type: string;
 }
