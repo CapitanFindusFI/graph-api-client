@@ -7,9 +7,11 @@ describe('it should correctly throw library errors', () => {
         const queryName = 'test';
         const queryParams: GraphQLParam[] = [];
         const queryFields: GraphQLField[] = [];
+        const queryValues = {foo: 'bar'};
 
-        const methodCall = new GraphQLQueryRequest(queryName, queryParams, queryFields).generate;
-        expect(methodCall).toThrowError('missing params');
+        expect(() => {
+            new GraphQLQueryRequest(queryName, queryParams, queryFields, queryValues).generate()
+        }).toThrow();
     });
 
     it('should throw an error for uncongruent query params', () => {
@@ -21,8 +23,9 @@ describe('it should correctly throw library errors', () => {
         const queryFields = ['name'];
         const queryValues = {i: '123'};
 
-        const methodCall = new GraphQLQueryRequest(queryName, queryParams, queryFields, queryValues).generate;
-        expect(methodCall).toThrowError('missing params');
+        expect(() => {
+            new GraphQLQueryRequest(queryName, queryParams, queryFields, queryValues).generate()
+        }).toThrow();
     });
 
     it('should throw an error for uncongruent query params with aliases', () => {
@@ -35,7 +38,8 @@ describe('it should correctly throw library errors', () => {
         const queryFields = ['name'];
         const queryValues = {id: '123'};
 
-        const methodCall = new GraphQLQueryRequest(queryName, queryParams, queryFields, queryValues).generate;
-        expect(methodCall).toThrowError('missing params');
+        expect(() => {
+            new GraphQLQueryRequest(queryName, queryParams, queryFields, queryValues).generate();
+        }).toThrow();
     });
 });

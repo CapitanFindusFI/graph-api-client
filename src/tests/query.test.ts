@@ -107,7 +107,7 @@ describe('it should handle graph query request', () => {
         }];
         const queryFields = ['id'];
         const queryValues = {
-            $input: 'foo'
+            input: 'foo'
         };
 
         const generatedQuery = new GraphQLQueryRequest(queryName, queryParams, queryFields, queryValues).generate();

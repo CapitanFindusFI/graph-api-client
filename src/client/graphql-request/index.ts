@@ -2,19 +2,22 @@ import Helper from "../../helper";
 import {GraphQLField} from "../../types";
 import {GraphQLParam} from "../../interfaces";
 
-class GraphQLRequest {
+abstract class GraphQLRequest {
     protected requestName: string;
     protected requestParams: GraphQLParam[];
     protected resultFields: GraphQLField[];
     protected requestValues: { [key: string]: any };
 
-    constructor(requestName: string,
-                requestParams: GraphQLParam[],
-                resultFields: GraphQLField[],
-                requestValues: { [key: string]: any } = {}
+    protected constructor(requestName: string,
+                          requestParams: GraphQLParam[],
+                          resultFields: GraphQLField[],
+                          requestValues: { [key: string]: any } = {}
     ) {
         if (!Array.isArray(resultFields))
             throw new Error('Result fields must be an array');
+
+        if (!resultFields.length)
+            throw new Error('Must select a list of fields to retrieve');
 
         this.requestName = requestName;
         this.requestParams = requestParams;
@@ -24,7 +27,7 @@ class GraphQLRequest {
         return this;
     }
 
-    areValuesValid(): boolean {
+    private areValuesValid(): boolean {
         const valueKeys = Object.keys(this.requestValues);
         if (!valueKeys.length) return true;
 
@@ -37,7 +40,7 @@ class GraphQLRequest {
         return true;
     }
 
-    getParamQueryName(graphQLParam: GraphQLParam): string {
+    protected getParamQueryName(graphQLParam: GraphQLParam): string {
         if (!graphQLParam['name'])
             throw new Error('GraphQL param is missing its name');
 
@@ -52,7 +55,7 @@ class GraphQLRequest {
         return paramName
     }
 
-    generateHeaderField(headerParam: GraphQLParam): string {
+    protected generateHeaderField(headerParam: GraphQLParam): string {
         const fieldName = `$${this.getParamQueryName(headerParam)}`;
 
         if (!headerParam['type'])
@@ -63,13 +66,13 @@ class GraphQLRequest {
         return [fieldName, fieldType].join(':')
     }
 
-    generateFragmentField(fragmentField: GraphQLParam): string {
+    protected generateFragmentField(fragmentField: GraphQLParam): string {
         const fieldName = this.getParamQueryName(fragmentField);
 
         return [fieldName, `$${fieldName}`].join(':');
     }
 
-    generateQueryField(queryField: any): string {
+    protected generateQueryField(queryField: any): string {
         if (Helper.isObject(queryField)) {
             const objectKeys = Object.keys(queryField);
             if (objectKeys.length > 1)
@@ -85,19 +88,13 @@ class GraphQLRequest {
         }
     }
 
-    generateHeader(): string {
-        throw new Error('Must be implemented in extending classes');
-    }
+    abstract generateHeader(): string
 
-    generateFragment(): string {
-        throw new Error('Must be implemented in extending classes');
-    }
+    abstract generateFragment(): string
 
-    generateBody(): string {
-        throw new Error('Must be implemented in extending classes');
-    }
+    abstract generateBody(): string
 
-    generate(): string {
+    public generate(): string {
         if (!this.areValuesValid())
             throw new Error('Passed values does not conform with query');
 
