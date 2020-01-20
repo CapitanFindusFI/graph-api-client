@@ -1,26 +1,26 @@
-import { IGraphQLParam } from "../../interfaces";
-import { GraphQLField } from "../../types";
-import GraphQLRequest from "./index";
+import { IGraphQLParam } from '../../interfaces';
+import { GraphQLField } from '../../types';
+import GraphQLRequest from './index';
 
 class GraphQLQueryRequest extends GraphQLRequest {
   constructor(
     queryName: string,
     queryParameters: IGraphQLParam[],
     queryFields: GraphQLField[],
-    queryValues: { [key: string]: any } = {}
+    queryValues: { [key: string]: any } = {},
   ) {
     super(queryName, queryParameters, queryFields, queryValues);
     return this;
   }
 
   public generateHeader(): string {
-    let queryString = "query";
+    let queryString = 'query';
     if (this.requestParams.length) {
       const headerParams = this.requestParams.map(this.generateHeaderField.bind(this));
       queryString += `(${headerParams})`;
     }
 
-    queryString += "{";
+    queryString += '{';
     return queryString;
   }
 
@@ -31,13 +31,13 @@ class GraphQLQueryRequest extends GraphQLRequest {
       fragmentField += `(${fragmentParams})`;
     }
 
-    fragmentField += "{";
+    fragmentField += '{';
 
     return fragmentField;
   }
 
   public generateBody(): string {
-    return this.resultFields.map(this.generateQueryField.bind(this)).join(" ");
+    return this.resultFields.map(this.generateQueryField.bind(this)).join(' ');
   }
 }
 
