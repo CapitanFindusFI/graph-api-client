@@ -1,6 +1,6 @@
 {
   "name": "graph-api-client",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "./lib/client/index.js",
   "types": "./lib/client/index.d.ts",
   "author": {
