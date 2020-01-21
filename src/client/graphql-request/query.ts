@@ -1,6 +1,6 @@
 import { IGraphQLParam } from '../../interfaces';
 import { GraphQLField } from '../../types';
-import GraphQLRequest from './index';
+import { GraphQLRequest } from "./index";
 
 class GraphQLQueryRequest extends GraphQLRequest {
   constructor(
