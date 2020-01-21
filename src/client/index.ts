@@ -1,7 +1,7 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import { IGraphQLParam } from "../interfaces";
-import GraphQLMutationRequest from "./graphql-request/mutation";
-import GraphQLQueryRequest from "./graphql-request/query";
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import { IGraphQLParam } from '../interfaces';
+import GraphQLMutationRequest from './graphql-request/mutation';
+import GraphQLQueryRequest from './graphql-request/query';
 
 export class GraphAPIClient {
   private axios: AxiosInstance;
@@ -13,21 +13,21 @@ export class GraphAPIClient {
   public get<T>(path: string, params = {}, headers = {}): Promise<T> {
     return this.axios.get(path, {
       ...params,
-      ...headers
+      ...headers,
     });
   }
 
   public post<T>(path: string, body: any, params = {}, headers = {}): Promise<T> {
     return this.axios.post(path, body, {
       ...params,
-      ...headers
+      ...headers,
     });
   }
 
   public collectRequestBody(query: string, variables: object): { query: string; variables: object } {
     return {
       query,
-      variables
+      variables,
     };
   }
 
@@ -36,7 +36,7 @@ export class GraphAPIClient {
     queryParams: IGraphQLParam[],
     queryFields: string[],
     queryValues: { [name: string]: any } = {},
-    path: string = "/graphql"
+    path: string = '/graphql',
   ): Promise<T> {
     const graphQLPayload = new GraphQLQueryRequest(queryName, queryParams, queryFields, queryValues).generate();
     const requestBody = this.collectRequestBody(graphQLPayload, queryValues);
@@ -49,13 +49,13 @@ export class GraphAPIClient {
     mutationParams: IGraphQLParam[],
     queryFields: string[],
     mutationValues: { [name: string]: any } = {},
-    path: string = "/graphql"
+    path: string = '/graphql',
   ): Promise<T> {
     const graphQLPayload = new GraphQLMutationRequest(
       mutationName,
       mutationParams,
       queryFields,
-      mutationValues
+      mutationValues,
     ).generate();
     const requestBody = this.collectRequestBody(graphQLPayload, mutationValues);
 
