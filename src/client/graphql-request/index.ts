@@ -30,14 +30,13 @@ export abstract class GraphQLRequest {
     this.resultFields = resultFields;
     this.requestValues = requestValues;
 
+    this.validateParameters();
+    this.validateValues();
+
     return this;
   }
 
   public generate(newlines: boolean = true): string {
-    if (!this.areValuesValid()) {
-      throw new Error("Passed values does not conform with query");
-    }
-
     const requestHeader: string = GraphQLGenerator.generateWrapper(this.requestHeader, flatten(this.requestParams));
     const generatedFragments: string[] = this.requestNames.map((name, index) => {
       return GraphQLGenerator.generateFragment(name, this.requestParams[index], this.resultFields[index]);
@@ -50,12 +49,26 @@ export abstract class GraphQLRequest {
     ].join(separator);
   }
 
-  private areValuesValid(): boolean {
-    const valueKeys = Object.keys(this.requestValues);
-    if (!valueKeys.length) {
-      return true;
-    }
+  private validateParameters(): void {
+    flatten(this.requestParams).reduce((list: IGraphQLParam[], param: IGraphQLParam) => {
+      const existingIndex = list.findIndex(p => p.name === param.name);
+      if (existingIndex !== -1) {
+        throw new Error(`Duplicate parameter ${param.name}`);
+      }
 
-    return true;
+      return list.concat(param);
+    }, []);
+  }
+
+  private validateValues(): void {
+    const requestValueKeys: string[] = Object.keys(this.requestValues);
+    const requestFields = flatten(this.requestParams).map(GraphQLGenerator.getParamQueryName);
+
+    const wrongValues = requestFields.filter((fieldName) => requestValueKeys.indexOf(fieldName.toString()) === -1);
+    if (wrongValues.length > 0) {
+      throw new Error(
+        `GraphQL Request is missing following fields: ${wrongValues.join(",")}, double check your aliases if present`
+      );
+    }
   }
 }

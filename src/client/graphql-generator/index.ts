@@ -55,19 +55,7 @@ export class GraphQLGenerator {
     return queryStrings.join(" ");
   }
 
-  private static generateWrapperItem(param: IGraphQLParam) {
-    const fieldName = `$${GraphQLGenerator.getParamQueryName(param)}`;
-
-    if (!param.type) {
-      throw new Error(`Header param: ${param.name} is missing its type`);
-    }
-
-    const fieldType = param.isArray ? `[${param.type}]` : param.type;
-
-    return [fieldName, fieldType].join(":");
-  }
-
-  private static getParamQueryName(param: IGraphQLParam): string {
+  public static getParamQueryName(param: IGraphQLParam): string {
     if (!param.name) {
       throw new Error("GraphQL param is missing its name");
     }
@@ -81,5 +69,17 @@ export class GraphQLGenerator {
     }
 
     return paramName;
+  }
+
+  private static generateWrapperItem(param: IGraphQLParam) {
+    const fieldName = `$${GraphQLGenerator.getParamQueryName(param)}`;
+
+    if (!param.type) {
+      throw new Error(`Header param: ${param.name} is missing its type`);
+    }
+
+    const fieldType = param.isArray ? `[${param.type}]` : param.type;
+
+    return [fieldName, fieldType].join(":");
   }
 }
