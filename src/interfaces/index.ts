@@ -4,3 +4,8 @@ export interface IGraphQLParam {
   isArray?: boolean;
   type: string;
 }
+
+export interface IGraphClientConfig {
+  queryPayloadName: string;
+  variablesPayloadName: string
+}
