@@ -1,4 +1,4 @@
 export enum GraphQLOperationType {
-  QUERY = "query",
-  MUTATION = "mutation"
+  QUERY = 'query',
+  MUTATION = 'mutation',
 }
