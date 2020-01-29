@@ -1,3 +1,4 @@
+/* tslint:disable:variable-name */
 import { IGraphQLParam } from "../../interfaces";
 
 export abstract class GraphQLRequest {

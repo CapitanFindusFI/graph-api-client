@@ -1,3 +1,4 @@
+/* tslint:disable:variable-name */
 import { isObject, set } from "lodash";
 import { GraphQLOperationType } from "../../enums";
 import { IGraphQLParam } from "../../interfaces";
