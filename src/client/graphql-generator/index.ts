@@ -1,8 +1,8 @@
 /* tslint:disable:variable-name */
-import { isObject, set } from "lodash";
-import { GraphQLOperationType } from "../../enums";
-import { IGraphQLParam } from "../../interfaces";
-import { GraphQLRequest } from "../graphql-request";
+import { isObject, set } from 'lodash';
+import { GraphQLOperationType } from '../../enums';
+import { IGraphQLParam } from '../../interfaces';
+import { GraphQLRequest } from '../graphql-request';
 
 export class GraphQLGenerator {
   get parameters(): Map<string, string> {
@@ -20,7 +20,7 @@ export class GraphQLGenerator {
         .map(([key, type]) => {
           return `$${key}:${type}`;
         })
-        .join(",");
+        .join(',');
       queryString += `(${headerParams})`;
     }
 
@@ -28,15 +28,15 @@ export class GraphQLGenerator {
   }
 
   public static generateFragment(name: string, params: IGraphQLParam[], fields: string[]): string {
-    return [GraphQLGenerator.generateHeader(name, params), GraphQLGenerator.generateFields(fields)].join("");
+    return [GraphQLGenerator.generateHeader(name, params), GraphQLGenerator.generateFields(fields)].join('');
   }
 
   public static generateHeader(name: string, params: IGraphQLParam[]): string {
-    let headerParams = "";
+    let headerParams = '';
     if (params.length) {
       const queryString = params.map((param: IGraphQLParam) => {
         const fieldName = GraphQLGenerator.getParamQueryName(param);
-        return [fieldName, `$${fieldName}`].join(":");
+        return [fieldName, `$${fieldName}`].join(':');
       });
 
       headerParams = `(${queryString})`;
@@ -56,7 +56,7 @@ export class GraphQLGenerator {
       Object.keys(item).forEach((key: string) => {
         const itemValue: any = item[key];
         if (isObject(itemValue)) {
-          unwrappedQuery = unwrappedQuery.concat(key, "{", unwrapItem(itemValue), "}");
+          unwrappedQuery = unwrappedQuery.concat(key, '{', unwrapItem(itemValue), '}');
         } else {
           unwrappedQuery.push(key);
         }
@@ -64,18 +64,18 @@ export class GraphQLGenerator {
       return unwrappedQuery;
     };
 
-    const queryStrings = ["{", ...unwrapItem(queryObject), "}"];
-    return queryStrings.join(" ");
+    const queryStrings = ['{', ...unwrapItem(queryObject), '}'];
+    return queryStrings.join(' ');
   }
 
   private static getParamQueryName(param: IGraphQLParam): string {
     if (!param.name) {
-      throw new Error("GraphQL param is missing its name");
+      throw new Error('GraphQL param is missing its name');
     }
 
     let paramName;
     if (param.alias) {
-      const paramString = param.alias.split("$");
+      const paramString = param.alias.split('$');
       paramName = paramString[paramString.length - 1];
     } else {
       paramName = `${param.name}`;
@@ -95,10 +95,10 @@ export class GraphQLGenerator {
 
   constructor(operationType: GraphQLOperationType, ...requests: GraphQLRequest[]) {
     if (!operationType) {
-      throw new Error("No operation type provided");
+      throw new Error('No operation type provided');
     }
     if (!requests.length) {
-      throw new Error("No requests provided");
+      throw new Error('No requests provided');
     }
 
     this.operationType = operationType;
@@ -110,7 +110,7 @@ export class GraphQLGenerator {
 
   public generateQueryString(): string {
     const queryWrapper = GraphQLGenerator.generateWrapper(this.operationType, this._parameters);
-    const queryFragments = this.requests.map(GraphQLGenerator.generateRequestQuery).join(" ");
+    const queryFragments = this.requests.map(GraphQLGenerator.generateRequestQuery).join(' ');
 
     return `${queryWrapper}{${queryFragments}}`;
   }
@@ -121,7 +121,7 @@ export class GraphQLGenerator {
         .map(p => {
           return {
             name: GraphQLGenerator.getParamQueryName(p),
-            type: p.type
+            type: p.type,
           };
         })
         .forEach(item => {
@@ -129,7 +129,7 @@ export class GraphQLGenerator {
             const itemType: string | undefined = map.get(item.name);
             if (itemType !== item.type) {
               throw new Error(
-                `Param ${item.name} can't be duplicated with a different type. current type: ${itemType}, trying to set: ${item.type}`
+                `Param ${item.name} can't be duplicated with a different type. current type: ${itemType}, trying to set: ${item.type}`,
               );
             }
           } else {
