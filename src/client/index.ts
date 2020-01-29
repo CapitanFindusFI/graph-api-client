@@ -13,7 +13,8 @@ export class GraphAPIClient {
   private axios: AxiosInstance;
   private config: IGraphClientConfig;
 
-  constructor(axiosRequestConfig: AxiosRequestConfig = {}, clientConfig: IGraphClientConfig) {
+  constructor(axiosRequestConfig: AxiosRequestConfig = {},
+              clientConfig: IGraphClientConfig = defaultClientConfig) {
     this.axios = axios.create(axiosRequestConfig);
     this.config = Object.assign({}, defaultClientConfig, clientConfig);
   }
