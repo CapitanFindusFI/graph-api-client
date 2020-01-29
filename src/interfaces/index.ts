@@ -7,5 +7,5 @@ export interface IGraphQLParam {
 
 export interface IGraphClientConfig {
   queryPayloadName: string;
-  variablesPayloadName: string
+  variablesPayloadName: string;
 }
