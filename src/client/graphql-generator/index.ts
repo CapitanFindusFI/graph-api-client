@@ -46,7 +46,9 @@ export class GraphQLGenerator {
   }
 
   public static generateFields(fields: string[]): string {
-    if (!fields.length) return "";
+    if (!fields.length) {
+      return "";
+    }
 
     const queryObject = fields.reduce((object, field: string) => {
       set(object, field, true);
