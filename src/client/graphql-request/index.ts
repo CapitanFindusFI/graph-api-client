@@ -1,8 +1,8 @@
 /* tslint:disable:variable-name */
-import { IGraphQLParam } from '../../interfaces';
+import { IGraphQLParam } from "../../interfaces";
 
 export abstract class GraphQLRequest {
-  get requestValues(): Map<string, any> {
+  get requestValues(): { [p: string]: any } {
     return this._requestValues;
   }
 
@@ -21,13 +21,13 @@ export abstract class GraphQLRequest {
   private readonly _requestName: string;
   private readonly _resultFields: string[];
   private readonly _requestParams: IGraphQLParam[];
-  private readonly _requestValues: Map<string, any>;
+  private readonly _requestValues: { [p: string]: any };
 
   protected constructor(
     requestName: string,
     resultFields: string[],
     requestParams: IGraphQLParam[] = [],
-    requestValues: Map<string, any> = new Map<string, any>(),
+    requestValues: { [p: string]: any } = {}
   ) {
     this._requestName = requestName;
     this._resultFields = resultFields;
