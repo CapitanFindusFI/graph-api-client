@@ -5,9 +5,9 @@ class GraphQLQueryRequest extends GraphQLRequest {
 
   constructor(requestName: string,
               resultFields: string[],
-              requestParms: IGraphQLParam[] = [],
+              requestParams: IGraphQLParam[] = [],
               requestValues: Map<string, any> = new Map()) {
-    super(requestName, resultFields, requestParms, requestValues);
+    super(requestName, resultFields, requestParams, requestValues);
   }
 }
 

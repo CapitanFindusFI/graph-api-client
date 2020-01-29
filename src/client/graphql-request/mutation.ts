@@ -5,9 +5,9 @@ class GraphQLMutationRequest extends GraphQLRequest {
 
   constructor(requestName: string,
               resultFields: string[],
-              requestParms: IGraphQLParam[],
-              requestValues: Map<string, any>) {
-    super(requestName, resultFields, requestParms, requestValues);
+              requestParams: IGraphQLParam[] = [],
+              requestValues: Map<string, any> = new Map()) {
+    super(requestName, resultFields, requestParams, requestValues);
   }
 }
 

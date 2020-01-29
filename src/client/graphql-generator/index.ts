@@ -1,4 +1,5 @@
 import { isObject, set } from "lodash";
+import { GraphQLOperationType } from "../../enums";
 import { IGraphQLParam } from "../../interfaces";
 import { GraphQLRequest } from "../graphql-request";
 
@@ -11,10 +12,12 @@ export class GraphQLGenerator {
     return this._values;
   }
 
-  public static generateWrapper(operationType: string, params: IGraphQLParam[]): string {
+  public static generateWrapper(operationType: string, params: Map<string, string>): string {
     let queryString = operationType;
-    if (params.length) {
-      const headerParams: string = params.map(GraphQLGenerator.generateWrapperItem.bind(this)).join(",");
+    if (params.size) {
+      const headerParams: string = Array.from(params.entries()).map(([key, type]) => {
+        return `$${key}:${type}`;
+      }).join(",");
       queryString += `(${headerParams})`;
     }
 
@@ -65,18 +68,6 @@ export class GraphQLGenerator {
     return queryStrings.join(" ");
   }
 
-  private static generateWrapperItem(param: IGraphQLParam) {
-    const fieldName = `$${GraphQLGenerator.getParamQueryName(param)}`;
-
-    if (!param.type) {
-      throw new Error(`Header param: ${param.name} is missing its type`);
-    }
-
-    const fieldType = param.isArray ? `[${param.type}]` : param.type;
-
-    return [fieldName, fieldType].join(":");
-  }
-
   private static getParamQueryName(param: IGraphQLParam): string {
     if (!param.name) {
       throw new Error("GraphQL param is missing its name");
@@ -101,15 +92,20 @@ export class GraphQLGenerator {
     );
   }
 
-  private requests: GraphQLRequest[];
+  private readonly requests: GraphQLRequest[];
+  private readonly operationType: GraphQLOperationType;
   private readonly _parameters: Map<string, string>;
   private readonly _values: Map<string, any>;
 
-  constructor(...requests: GraphQLRequest[]) {
+  constructor(operationType: GraphQLOperationType, ...requests: GraphQLRequest[]) {
+    if (!operationType) {
+      throw new Error("No operation type provided");
+    }
     if (!requests.length) {
       throw new Error("No requests provided");
     }
 
+    this.operationType = operationType;
     this.requests = requests;
 
     this._parameters = this.collectRequestParameters();
@@ -117,7 +113,10 @@ export class GraphQLGenerator {
   }
 
   public generateQueryString(): string {
-    return this.requests.map(GraphQLGenerator.generateRequestQuery).join("\n");
+    const queryWrapper = GraphQLGenerator.generateWrapper(this.operationType, this._parameters);
+    const queryFragments = this.requests.map(GraphQLGenerator.generateRequestQuery).join(" ");
+
+    return `${queryWrapper}{${queryFragments}}`;
   }
 
   private collectRequestParameters(): Map<string, string> {
@@ -130,7 +129,7 @@ export class GraphQLGenerator {
       }).forEach((item) => {
         if (map.has(item.name)) {
           const itemType: string | undefined = map.get(item.name);
-          if (itemType === item.type) {
+          if (itemType !== item.type) {
             throw new Error(`Param ${item.name} can't be duplicated with a different type. current type: ${itemType}, trying to set: ${item.type}`);
           }
         } else {

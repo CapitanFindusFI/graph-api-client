@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import { GraphQLOperationType } from "../enums";
 import { GraphQLGenerator } from "./graphql-generator";
 import { GraphQLRequest } from "./graphql-request";
 
@@ -23,8 +24,8 @@ export class GraphAPIClient {
     });
   }
 
-  public collectRequestBody(...requests: GraphQLRequest[]): { query: string; variables: Map<string, any> } {
-    const generator = new GraphQLGenerator(...requests);
+  public collectRequestBody(operationType: GraphQLOperationType, ...requests: GraphQLRequest[]): { query: string; variables: Map<string, any> } {
+    const generator = new GraphQLGenerator(operationType, ...requests);
     const query = generator.generateQueryString();
     const variables = generator.values;
     return {
@@ -34,16 +35,12 @@ export class GraphAPIClient {
   }
 
   public query<T>(path: string = "/graphql", ...requests: GraphQLRequest[]): Promise<T> {
-    const body = this.collectRequestBody(...requests);
-    return this.request<T>(path, body);
+    const body = this.collectRequestBody(GraphQLOperationType.QUERY, ...requests);
+    return this.post(path, body);
   }
 
   public mutate<T>(path: string = "/graphql", ...requests: GraphQLRequest[]): Promise<T> {
-    const body = this.collectRequestBody(...requests);
-    return this.request<T>(path, body);
-  }
-
-  private request<T>(path: string, body: any): Promise<T> {
+    const body = this.collectRequestBody(GraphQLOperationType.MUTATION, ...requests);
     return this.post(path, body);
   }
 }
