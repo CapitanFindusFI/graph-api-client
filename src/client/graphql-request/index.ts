@@ -1,5 +1,5 @@
 /* tslint:disable:variable-name */
-import { IGraphQLParam } from "../../interfaces";
+import { IGraphQLParam } from '../../interfaces';
 
 export abstract class GraphQLRequest {
   get requestValues(): Map<string, any> {
@@ -27,7 +27,7 @@ export abstract class GraphQLRequest {
     requestName: string,
     resultFields: string[],
     requestParams: IGraphQLParam[] = [],
-    requestValues: Map<string, any> = new Map<string, any>()
+    requestValues: Map<string, any> = new Map<string, any>(),
   ) {
     this._requestName = requestName;
     this._resultFields = resultFields;
