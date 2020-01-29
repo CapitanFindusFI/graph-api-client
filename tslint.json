@@ -2,5 +2,8 @@
   "extends": [
     "tslint:recommended",
     "tslint-config-prettier"
+  ],
+  "variable-name": [
+    "allow-leading-underscore"
   ]
 }

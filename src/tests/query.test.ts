@@ -1,57 +1,27 @@
+import { GraphAPIClient } from "../client";
 import GraphQLQueryRequest from "../client/graphql-request/query";
 
+const graphClient = new GraphAPIClient();
 const queryRequest = GraphQLQueryRequest;
 
-describe("it should correctly generate GraphQL queries", () => {
+describe("it should correctly generate GraphQL request bodies", () => {
   it("should generate a simple query", () => {
-    const r = new queryRequest([
-      "test"
-    ], [
-      [{ name: "foo", type: "bar" }]
-    ], [
-      ["id"]
-    ], {
-      foo: "abc"
-    });
+    const r = new queryRequest("test", ["id", "name"]);
+    const { query, variables } = graphClient.collectRequestBody(r);
 
-    const query = r.generate(false);
-
-    expect(query).toBe("query($foo:bar){test(foo:$foo){ id }}");
+    expect(query).toBe("test{ id name }");
+    expect(variables).toEqual(new Map());
   });
 
-  it("should generate a multiple query", () => {
-    const r = new queryRequest([
-      "test", "test2"
-    ], [
-      [{ name: "foo", type: "bar" }],
-      [{ name: "bar", type: "baz" }]
-    ], [
-      ["id"],
-      ["name"]
-    ], {
-      bar: "def",
-      foo: "abc"
-    });
+  it("should generate a simple query with parameters", () => {
+    const values = new Map<string, any>();
+    values.set("foo", "123");
+    const r = new queryRequest("test", ["id", "name"], [{
+      name: "foo",
+      type: "bar"
+    }], values);
 
-    const query = r.generate(false);
-
-    expect(query).toBe("query($foo:bar,$bar:baz){test(foo:$foo){ id }test2(bar:$bar){ name }}");
-  });
-
-  it("should throw an error for duplicate parameters", () => {
-    expect(() => {
-      const r = new queryRequest([
-        "test", "test2"
-      ], [
-        [{ name: "foo", type: "bar" }],
-        [{ name: "foo", type: "baz" }]
-      ], [
-        ["id"],
-        ["name"]
-      ], {
-        bar: "def",
-        foo: "abc"
-      });
-    }).toThrowError();
+    const { query, variables } = graphClient.collectRequestBody(r);
+    expect(query).toBe("($foo: bar){ test(foo:$foo){ id name }}");
   });
 });

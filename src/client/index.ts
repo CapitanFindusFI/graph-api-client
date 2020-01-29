@@ -1,12 +1,11 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import { IGraphQLParam } from "../interfaces";
-import GraphQLMutationRequest from "./graphql-request/mutation";
-import GraphQLQueryRequest from "./graphql-request/query";
+import { GraphQLGenerator } from "./graphql-generator";
+import { GraphQLRequest } from "./graphql-request";
 
 export class GraphAPIClient {
   private axios: AxiosInstance;
 
-  constructor(axiosRequestConfig: AxiosRequestConfig) {
+  constructor(axiosRequestConfig: AxiosRequestConfig = {}) {
     this.axios = axios.create(axiosRequestConfig);
   }
 
@@ -24,46 +23,27 @@ export class GraphAPIClient {
     });
   }
 
-  public collectRequestBody(query: string, variables: object): { query: string; variables: object } {
+  public collectRequestBody(...requests: GraphQLRequest[]): { query: string; variables: Map<string, any> } {
+    const generator = new GraphQLGenerator(...requests);
+    const query = generator.generateQueryString();
+    const variables = generator.values;
     return {
       query,
       variables
     };
   }
 
-  public query<T>(
-    queryName: string[],
-    queryParams: IGraphQLParam[][],
-    queryFields: string[][],
-    queryValues: { [name: string]: any } = {},
-    path: string = "/graphql"
-  ): Promise<T> {
-    const graphQLPayload = new GraphQLQueryRequest(
-      queryName,
-      queryParams,
-      queryFields,
-      queryValues
-    ).generate();
-    const requestBody = this.collectRequestBody(graphQLPayload, queryValues);
-
-    return this.post<T>(path, requestBody);
+  public query<T>(path: string = "/graphql", ...requests: GraphQLRequest[]): Promise<T> {
+    const body = this.collectRequestBody(...requests);
+    return this.request<T>(path, body);
   }
 
-  public mutate<T>(
-    mutationName: string[],
-    mutationParams: IGraphQLParam[][],
-    queryFields: string[][],
-    mutationValues: { [name: string]: any } = {},
-    path: string = "/graphql"
-  ): Promise<T> {
-    const graphQLPayload = new GraphQLMutationRequest(
-      mutationName,
-      mutationParams,
-      queryFields,
-      mutationValues
-    ).generate();
-    const requestBody = this.collectRequestBody(graphQLPayload, mutationValues);
+  public mutate<T>(path: string = "/graphql", ...requests: GraphQLRequest[]): Promise<T> {
+    const body = this.collectRequestBody(...requests);
+    return this.request<T>(path, body);
+  }
 
-    return this.post<T>(path, requestBody);
+  private request<T>(path: string, body: any): Promise<T> {
+    return this.post(path, body);
   }
 }
