@@ -1,12 +1,12 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import { GraphQLOperationType } from "../enums";
-import { IGraphClientConfig } from "../interfaces";
-import { GraphQLGenerator } from "./graphql-generator";
-import { GraphQLRequest } from "./graphql-request";
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import { GraphQLOperationType } from '../enums';
+import { IGraphClientConfig } from '../interfaces';
+import { GraphQLGenerator } from './graphql-generator';
+import { GraphQLRequest } from './graphql-request';
 
 const defaultClientConfig: IGraphClientConfig = {
-  queryPayloadName: "query",
-  variablesPayloadName: "variables"
+  queryPayloadName: 'query',
+  variablesPayloadName: 'variables',
 };
 
 export class GraphAPIClient {
@@ -34,16 +34,24 @@ export class GraphAPIClient {
 
     return {
       [queryKeyName]: generator.generateQueryString(),
-      [variablesKeyName]: generator.generateQueryValues()
+      [variablesKeyName]: generator.generateQueryValues(),
     };
   }
 
-  public query<T>(path: string = "/graphql", config: AxiosRequestConfig = {}, ...requests: GraphQLRequest[]): Promise<T> {
+  public query<T>(
+    path: string = '/graphql',
+    config: AxiosRequestConfig = {},
+    ...requests: GraphQLRequest[]
+  ): Promise<T> {
     const body = this.collectRequestBody(GraphQLOperationType.QUERY, ...requests);
     return this.post(path, body, config);
   }
 
-  public mutate<T>(path: string = "/graphql", config: AxiosRequestConfig = {}, ...requests: GraphQLRequest[]): Promise<T> {
+  public mutate<T>(
+    path: string = '/graphql',
+    config: AxiosRequestConfig = {},
+    ...requests: GraphQLRequest[]
+  ): Promise<T> {
     const body = this.collectRequestBody(GraphQLOperationType.MUTATION, ...requests);
     return this.post(path, body, config);
   }
