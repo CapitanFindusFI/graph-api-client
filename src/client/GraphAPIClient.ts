@@ -9,7 +9,28 @@ const defaultClientConfig: IGraphClientConfig = {
     variablesPayloadName: 'variables',
 };
 
-export class GraphAPIClient {
+class GraphAPIClient {
+
+    public static collectRequestValues(requests: GraphQLRequest[]): object {
+        const requestValues = Object.create({});
+
+        requests.forEach((request: GraphQLRequest) => {
+            const {fragmentValues} = request;
+            if (fragmentValues) {
+                const valueKeys = Object.keys(fragmentValues);
+                if (valueKeys.length) {
+                    valueKeys.forEach((key: string) => {
+                        Object.assign(requestValues, {
+                            [key]: fragmentValues[key]
+                        });
+                    })
+                }
+            }
+        });
+
+        return requestValues;
+    }
+
     private axios: AxiosInstance;
     private config: IGraphClientConfig;
 
@@ -29,7 +50,7 @@ export class GraphAPIClient {
         const variablesKeyName: string = this.config.variablesPayloadName;
 
         const queryString: string = generator.generateRequestString(requests);
-        const queryValues: object = this.collectRequestValues(requests);
+        const queryValues: object = GraphAPIClient.collectRequestValues(requests);
 
         return {
             [queryKeyName]: queryString,
@@ -54,24 +75,6 @@ export class GraphAPIClient {
         const body = this.collectRequestBody("mutation", requests);
         return this.post<T>(path, body, config);
     }
-
-    private collectRequestValues(requests: GraphQLRequest[]): object {
-        const requestValues = Object.create({});
-
-        requests.forEach((request: GraphQLRequest) => {
-            const {fragmentValues} = request;
-            if (fragmentValues) {
-                const valueKeys = Object.keys(fragmentValues);
-                if (valueKeys.length) {
-                    valueKeys.forEach((key: string) => {
-                        Object.assign(requestValues, {
-                            [key]: fragmentValues[key]
-                        });
-                    })
-                }
-            }
-        });
-
-        return requestValues;
-    }
 }
+
+export default GraphAPIClient;

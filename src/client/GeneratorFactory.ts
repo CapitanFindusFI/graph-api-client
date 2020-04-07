@@ -15,4 +15,4 @@ class GeneratorFactory {
     }
 }
 
-export default GeneratorFactory
+export default GeneratorFactory;
