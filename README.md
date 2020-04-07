@@ -3,7 +3,7 @@ JS Library created to simplify using of GraphQL by using a defined structure for
 
 Just create an instance of the `GraphAPIClient` object and it will take care of the rest
 
-```
+```typescript
 class GraphAPIClient {
     constructor(
         axiosRequestConfig: AxiosRequestConfig = {}, 
@@ -17,11 +17,9 @@ class GraphAPIClient {
 
 the `axiosRequestConfig` parameter sets default parameters for the internal axios instance, while `clientConfig` sets the default API request payload keys, by default `{query, variables}`
 
+### Requests sending
 
-then just call the `.query` or the `.mutation` methods to enjoy magic things
-
-The main class `GraphQLRequest` is being extended by `GraphQLQueryRequest` and `GraphQLMutationRequest`, and is being utilized to generate GraphQL query string,
-used by the `GraphAPIClient` with its methods `.query` and `.mutate`
+Just call `client.query` or `client.mutation` to enjoy the magic
 
 ### Requests Generation
 
