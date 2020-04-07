@@ -5,12 +5,18 @@ Just create an instance of the `GraphAPIClient` object and it will take care of 
 
 ```
 class GraphAPIClient {
-    constructor(axiosRequestConfig){
-        // will create its own instance of Axios client
-        this.axios = new axios(axiosRequestConfig);
+    constructor(
+        axiosRequestConfig: AxiosRequestConfig = {}, 
+        clientConfig: IGraphClientConfig = defaultClientConfig
+    ) {
+        this.axios = axios.create(axiosRequestConfig);
+        this.config = Object.assign({}, defaultClientConfig, clientConfig);
     }
 }
 ```
+
+the `axiosRequestConfig` parameter sets default parameters for the internal axios instance, while `clientConfig` sets the default API request payload keys, by default `{query, variables}`
+
 
 then just call the `.query` or the `.mutation` methods to enjoy magic things
 
