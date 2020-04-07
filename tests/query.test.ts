@@ -1,6 +1,6 @@
-import { GraphAPIClient } from '../client';
-import GraphQLQueryRequest from '../client/graphql-request/query';
-import { GraphQLOperationType } from '../enums';
+import { GraphAPIClient } from '../src/client/GraphAPIClient';
+import GraphQLQueryRequest from '../src/client/graphql-request/query';
+import { GraphQLOperationType } from '../src/enums';
 
 const graphClient = new GraphAPIClient();
 const queryRequest = GraphQLQueryRequest;
