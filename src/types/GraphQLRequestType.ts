@@ -1,1 +1,1 @@
-export type GraphQLRequestType = "query" | "mutation";
+export type GraphQLRequestType = 'query' | 'mutation';
