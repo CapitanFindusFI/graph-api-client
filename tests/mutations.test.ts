@@ -1,4 +1,4 @@
-import {GraphQLRequest} from "graphql-request-generator/lib/src/interfaces/graphql-request.interface";
+import {GraphQLRequest} from 'graphql-request-generator/src/interfaces/graphql-request.interface'
 import GraphAPIClient from "../src/client/GraphAPIClient";
 
 const client = new GraphAPIClient();
@@ -58,8 +58,40 @@ describe('client mutation generation test suite', () => {
         }];
 
         const payload = client.collectRequestBody("mutation", requests);
-        const {query, variables} = payload;
+        const {query} = payload;
 
         expect(query).toBe('mutation{\nusers{id name surname}\naccounts{id createdAt}}');
     });
+
+    it('should correctly generate payload variables', () => {
+        const requests: GraphQLRequest[] = [{
+            fragmentFields: ['id', 'name', 'surname'],
+            fragmentName: 'updateUser',
+            fragmentParams: [{
+                name: 'user',
+                type: 'UpdateUserInput'
+            }],
+            fragmentValues: {
+                user: {
+                    id: 123,
+                    name: 'foo',
+                    surname: 'bar'
+                }
+            }
+        }];
+
+        const payload = client.collectRequestBody("mutation", requests);
+        const {query, variables} = payload;
+        expect(query).toBe('mutation($user:UpdateUserInput){\nupdateUser(user:$user){id name surname}}');
+
+        const variableKeys = Object.keys(variables);
+        expect(variableKeys).toEqual(['user']);
+
+        const {user} = variables;
+        expect(user).toEqual({
+            id: 123,
+            name: 'foo',
+            surname: 'bar'
+        })
+    })
 });

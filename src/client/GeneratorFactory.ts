@@ -1,5 +1,5 @@
-import GraphqlMutationGenerator from 'graphql-request-generator/lib/src/generator/graphql-mutation.generator';
-import GraphqlQueryGenerator from 'graphql-request-generator/lib/src/generator/graphql-query.generator';
+import GraphqlMutationGenerator from "graphql-request-generator/lib/generator/graphql-mutation.generator";
+import GraphqlQueryGenerator from "graphql-request-generator/lib/generator/graphql-query.generator";
 import { GraphQLRequestType } from '../types/GraphQLRequestType';
 
 class GeneratorFactory {

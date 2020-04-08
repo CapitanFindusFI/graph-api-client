@@ -1,4 +1,4 @@
-import {GraphQLRequest} from "graphql-request-generator/lib/src/interfaces/graphql-request.interface";
+import {GraphQLRequest} from "graphql-request-generator/lib/interfaces/graphql-request.interface";
 import GraphAPIClient from "../src/client/GraphAPIClient";
 
 const client = new GraphAPIClient();
