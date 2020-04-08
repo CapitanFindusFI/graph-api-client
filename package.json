@@ -10,6 +10,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest --config jestconfig.json",
+    "coverage": "jest --config jestconfig.json --coverage",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
@@ -21,8 +22,8 @@
   },
   "dependencies": {
     "axios": "^0.19.0",
-    "graphql-request-generator": "^1.0.0",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "graphql-request-generator": "^1.0.5"
   },
   "devDependencies": {
     "@types/jest": "^24.9.0",
