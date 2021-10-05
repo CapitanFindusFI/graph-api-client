@@ -22,8 +22,8 @@
   },
   "dependencies": {
     "axios": "^0.21.2",
-    "lodash": "^4.17.21",
-    "graphql-request-generator": "^1.0.5"
+    "graphql-request-generator": "^1.0.5",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@types/jest": "^24.9.0",
